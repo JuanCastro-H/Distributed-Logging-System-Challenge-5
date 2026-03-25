@@ -1,3 +1,8 @@
+# =======================================
+# BASE DE DATOS 
+# =======================================
+
+# --- Libreria De La BD ---
 import sqlite3
 
 # --- Nombre De La Base De Datos ---
