@@ -1,0 +1,17 @@
+# Base de datos
+*.db
+
+# Cache de Python
+__pycache__/
+*.pyc
+
+# Entornos virtuales
+env/
+venv/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Tokens generados dinámicamente
+tokens.json
