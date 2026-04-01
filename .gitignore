@@ -15,3 +15,7 @@ Thumbs.db
 
 # Tokens generados dinámicamente
 tokens.json
+
+# Base de datos y tokens generados dinamicamente
+data/logs.db
+data/tokens.json

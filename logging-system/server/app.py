@@ -1,23 +1,23 @@
 # =======================================
-#
+# SERVIDOR DE LOGGINGS 
 # =======================================
 
 # ---------------------------------------
 # LIBRERISA E IMPORTACIONES
 # ---------------------------------------
 
-from flask import Flask, request, jsonify # Framework para crear la API
-from database import create_connection    # Funcion para conectar la BD
-from datetime import datetime             # Manejar timestamps
-import json                               # Traer tokens dinamicos
-from pathlib import Path                  # Verificar archivos
+from flask import Flask, request, jsonify # Framework para crear la API.
+from database import create_connection    # Funcion para conectar la BD.
+from datetime import datetime             # Manejar timestamps.
+import json                               # Traer tokens dinamicos.
+from pathlib import Path                  # Verificar archivos.
 
 
 # --- Crear instancia del servidor ---
 app = Flask(__name__)
 
 # --- Tokens archivados validos ---
-TOKENS_FILE = "tokens.json"
+TOKENS_FILE = "logging-system/data/tokens.json"
 
 # --- Tokens validos ---
 VALID_TOKENS = {}
@@ -198,12 +198,15 @@ def get_logs():
     # EJECUCION DE QUERY
     # ---------------------------------------
 
+    # --- Crear Conexion Con BD ---
     conn   = create_connection()
     cursor = conn.cursor()
 
+    # --- Ejecutar Consulta ---
     cursor.execute(query, params)
     rows = cursor.fetchall()
 
+    # --- Cerrar Conexion ---
     conn.close()
 
 
@@ -211,7 +214,10 @@ def get_logs():
     # FORMATEO DE RESPUESTA
     # ---------------------------------------
 
+    
     logs = []
+
+    # --- Convertir Filas De BD a Estructura JSON ---
     for row in rows:
         logs.append({
             "id"          : row[0],
@@ -222,6 +228,7 @@ def get_logs():
             "received_at" : row[5]
         })
     
+    # --- Devolver JSON y Estado De La Respuesta ---
     return jsonify(logs), 200
 
 
@@ -274,8 +281,5 @@ def get_stats():
 # =========================
 if __name__ == "__main__":
 
-    import os
-    print(os.getcwd())
-    print("="*100)
     # --- Actualizar Cambios ---
     app.run(debug=True)

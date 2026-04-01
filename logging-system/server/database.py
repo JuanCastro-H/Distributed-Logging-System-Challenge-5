@@ -6,7 +6,7 @@
 import sqlite3
 
 # --- Nombre De La Base De Datos ---
-DB_NAME = "logs.db"
+DB_NAME = "logging-system/data/logs.db"
 
 # --- Crear Conexion Con La BD ---
 def create_connection():
