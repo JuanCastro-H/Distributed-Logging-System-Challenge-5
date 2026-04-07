@@ -19,3 +19,6 @@ tokens.json
 # Base de datos y tokens generados dinamicamente
 data/logs.db
 data/tokens.json
+
+# Archivos de testin local
+curls_de_prueba.py
