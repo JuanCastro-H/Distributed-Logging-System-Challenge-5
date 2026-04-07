@@ -22,3 +22,7 @@ data/tokens.json
 
 # Archivos de testin local
 curls_de_prueba.py
+
+# Postman (archivos locales de pruebas)
+postman/
+.postman/
