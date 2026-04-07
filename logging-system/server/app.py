@@ -28,9 +28,6 @@ app = Flask(__name__)
 # --- Tokens archivados validos ---
 TOKENS_FILE = "logging-system/data/tokens.json"
 
-# --- Tokens validos ---
-VALID_TOKENS = {}
-
 
 # -------------------------
 # CARGAR TOKENS
@@ -47,22 +44,6 @@ def load_tokens():
         
     return {}
 
-
-# -------------------------
-# GUARDAR TOKENS
-# -------------------------
-
-def save_token(token, service):
-
-    # --- Cargar Tokens Existentes ---
-    tokens = load_tokens()
-
-    # --- Agregar Nuevo Token ---
-    tokens[token] = service
-
-    # --- Guardarlo En El Archivo JSON ---
-    with open(TOKENS_FILE, "w") as f:
-        json.dump(tokens, f, indent=2)
 
 # ---------------------------------------
 # FUNCION: PARA GUARDR LOG EN LA BD
@@ -138,31 +119,13 @@ def receive_logs():
     if not auth_header or not auth_header.startswith("Token "):
         return jsonify({"error": "No se ha reconocido quien sos?"}), 401
     
-
     # --- Extraer Token ---
     token = auth_header.split(" ")[1]
 
-
-    # --- Registrar Token Si Es Nuevo ---
-    if token not in VALID_TOKENS:
-
-        # --- Obtener Nombre Del Servicio ---
-        service_name = request.json.get("service", "unknown")
-
-        # --- Guardar En Memoria  ---
-        VALID_TOKENS[token] = service_name
-
-        # --- Guardar En Archivo JSON ---
-        save_token(token, service_name)
-
-        # --- Log En Consola ---
-        print(f"[INFO] Nuevo token registraado Rey: {token} para {service_name}")
-
-
     # --- Validar El Token ---
-    if token not in VALID_TOKENS:
+    if token not in VALID_TOKENS.values():
         return jsonify({"error": "Token invalido. Quien sos bro?"}), 403
-    
+
 
     # ---------------------------------------
     # VALIDACION DEL PYLOAD
@@ -347,7 +310,7 @@ def delete_logs():
     cursor = conn.cursor()
 
     # ------------------------
-    # MODO 1: Borrar todo.
+    # MODO 1: BORRAR todo
     # ------------------------
 
     if mode == "all":
@@ -359,8 +322,7 @@ def delete_logs():
         cursor.execute("DELETE FROM logs")
 
     # ------------------------------
-    # MODO 2: Borrar por timestamp.
-
+    # MODO 2: BORRAR POR FECHA
     # ------------------------------
     else:
         # --- Dar Error Si No Hay Fecha Limite ---
@@ -371,7 +333,7 @@ def delete_logs():
             DELETE FROM logs
             WHERE timestamp < ?
         """, (before,))
-        
+
 
     deleted = cursor.rowcount # Cuenta de cuantos registros fueron eliminados.
 
@@ -391,6 +353,9 @@ def delete_logs():
 # =========================
 if __name__ == "__main__":
 
+    # --- Tokens validos ---
+    VALID_TOKENS = load_tokens()
+    
     # --- Iniciar Worker / ---
     worker_thread = threading.Thread(target=log_worker, daemon=True)
     worker_thread.start()
@@ -398,4 +363,5 @@ if __name__ == "__main__":
     print("[SERVER] Worker iniciado correctamente")
 
     # --- Actualizar Cambios ---
+    print(VALID_TOKENS)
     app.run(debug=True)
