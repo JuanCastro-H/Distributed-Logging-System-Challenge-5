@@ -7,23 +7,26 @@
 # ---------------------------------------
 import threading
 import time
-from datetime import datetime
 import sys
 import os
+
+# --- Asegurar Imports Del Proyecto ---
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 # --- Importar funciones del servicio ---
-from services.auth_service import generate_log, send_log
+from services.auth_service import generate_log, send_log, init_token, SERVICE
 
 
 # ---------------------------------------
 # CONFIGURACION DE LA PRUEBA
 # ---------------------------------------
 
-TOTAL_LOGS   = 100     # Cantidad total de logs a enviar
-NUM_THREADS  = 5       # Numero de hilos
+TOTAL_LOGS   = 300    # Cantidad total de logs a enviar
+NUM_THREADS  = 5      # Numero de hilos
 DELAY        = 0          # Delay entre envios (0 = max velocidad)
 
+# --- Inicializar Token ---
+init_token(SERVICE)
 
 # ---------------------------------------
 # FUNCION DE TRABAJO POR HILO
@@ -40,7 +43,7 @@ def worker(thread_id, logs_per_thread):
         log = generate_log()
 
         # --- Enviar log ---
-        send_log(log, "auth-service")
+        send_log(log, SERVICE)
 
         # --- Delay opcional ---
         if DELAY > 0:
