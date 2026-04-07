@@ -4,13 +4,18 @@
 
 # --- Libreria De La BD ---
 import sqlite3
+from pathlib import Path
 
 # --- Nombre De La Base De Datos ---
-DB_NAME = "logging-system/data/logs.db"
+BASE_DIR = Path(__file__).resolve().parent.parent
+DB_PATH = BASE_DIR / "data" / "logs.db"
+
+""# --- Nombre De La Base De Datos ---
+#B_NAME = "logging-system/data/logs.db"""
 
 # --- Crear Conexion Con La BD ---
 def create_connection():
-    conn = sqlite3.connect(DB_NAME, check_same_thread=False)
+    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
     return conn
 
 # --- Crear Tabla --- 
@@ -37,5 +42,6 @@ def create_table():
 
 
 if __name__ == "__main__":
+
     create_table()
     print("Base de datos y tabla creadas correctamente")
