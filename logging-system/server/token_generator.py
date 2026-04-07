@@ -11,14 +11,16 @@ import json
 from pathlib import Path
 import uuid
 
+# --- Direccion De Los Tokens ---
+BASE_DIR = Path(__file__).resolve().parent.parent
+TOKENS_FILE = BASE_DIR / "data" / "tokens.json"
 
-TOKENS_FILE = "tokens.json"        # Direccion De Los Tokens.
-Path("data").mkdir(exist_ok=True)  # Crear Carpeta Para Data Si no Existe.
+Path("data").mkdir(exist_ok=True)                # Crear Carpeta Para Data Si no Existe.
 
 
-#
-#
-#
+# ---------------------------------------
+# OBTENER O CREAR TOKEN
+# ---------------------------------------
 
 def get_or_create_token(service_name):
     
