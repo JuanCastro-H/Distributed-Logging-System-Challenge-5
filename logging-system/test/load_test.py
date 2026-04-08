@@ -5,13 +5,14 @@
 # ---------------------------------------
 # LIBRERIAS E IMPORTACIONES
 # ---------------------------------------
-import threading
-import time
-import sys
+import threading   # Permite ejecutar codigo en paralelo.
+import time        # Sirve para medir el tiempo.
+import sys         # 
 import os
 
+
 # --- Asegurar Imports Del Proyecto ---
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))) # Permite importar modulos desde carpetas superiores.
 
 # --- Importar funciones del servicio ---
 from services.auth_service import generate_log, send_log, init_token, SERVICE
@@ -23,7 +24,7 @@ from services.auth_service import generate_log, send_log, init_token, SERVICE
 
 TOTAL_LOGS   = 300    # Cantidad total de logs a enviar
 NUM_THREADS  = 5      # Numero de hilos
-DELAY        = 0          # Delay entre envios (0 = max velocidad)
+DELAY        = 0      # Delay entre envios (0 = max velocidad)
 
 # --- Inicializar Token ---
 init_token(SERVICE)
@@ -62,32 +63,38 @@ def run_load_test():
     print("INICIANDO PRUEBA DE CARGA")
     print("=======================================\n")
 
+    # --- Guardar El Tiempo Inicial ---
     start_time = time.time()
 
+    # --- Creaar Hilos ---
     threads = []
     logs_per_thread = TOTAL_LOGS // NUM_THREADS
 
     # --- Crear hilos ---
     for i in range(NUM_THREADS):
-
+        
+        # --- Crear Hilo Y Asignar Tarea ---
         t = threading.Thread(
             target=worker,
             args=(i, logs_per_thread)
         )
 
+        # --- Insertar Hilo A La Lista --- 
         threads.append(t)
-        t.start()
+        t.start() # Inicia el hilo.
 
     # --- Esperar a que todos terminen ---
     for t in threads:
         t.join()
 
+    # --- Finalizar Cronometro ---
     end_time = time.time()
 
     # ---------------------------------------
     # RESULTADOS
     # ---------------------------------------
 
+    # --- Calculo Del Tiempo Total ---
     total_time = end_time - start_time
 
     print("\n=======================================")

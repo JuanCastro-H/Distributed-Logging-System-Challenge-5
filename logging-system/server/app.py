@@ -163,7 +163,7 @@ def get_logs():
     # PARAMETRO DE FILTRADO
     # ---------------------------------------
 
-    timestamp_start   = request.args.get("timestamp_start")
+    timestamp_start   = request.args.get("timestamp_start") 
     timestamp_end     = request.args.get("timestamp_end")
     service           = request.args.get("service")
     severity          = request.args.get("severity")
@@ -334,7 +334,7 @@ def delete_logs():
             WHERE timestamp < ?
         """, (before,))
 
-
+    # --- Contador Del Borrado ---
     deleted = cursor.rowcount # Cuenta de cuantos registros fueron eliminados.
 
     # --- Guardar Cambios ---
@@ -357,11 +357,10 @@ if __name__ == "__main__":
     VALID_TOKENS = load_tokens()
     
     # --- Iniciar Worker / ---
-    worker_thread = threading.Thread(target=log_worker, daemon=True)
+    worker_thread = threading.Thread(target=log_worker, daemon=True) # Empleado silencioso.
     worker_thread.start()
 
     print("[SERVER] Worker iniciado correctamente")
 
     # --- Actualizar Cambios ---
-    print(VALID_TOKENS)
-    app.run(debug=True)
+    app.run(debug=False)
